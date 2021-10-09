@@ -9,7 +9,7 @@ import { useRouter } from 'next/router'
 
 // notion lib
 import { NotionRenderer, Code, Collection, CollectionRow } from 'react-notion-x'
-import { getPageTitle } from 'notion-utils'
+import { getPageTitle, getBlockTitle, uuidToId } from 'notion-utils'
 
 
 // other lib
@@ -47,10 +47,10 @@ const Modal = dynamic(
 export default function NotionPage({ recordMap, pageId }) {
     //
     const router = useRouter()
-   
+
 
     // Notion页面Title
-    const title = getPageTitle(recordMap) || config.name
+    // const title = getPageTitle(recordMap) || config.name
 
     // 夜晚模式
     const darkMode = useDarkMode(false, { classNameDark: 'dark-mode' })
@@ -58,7 +58,17 @@ export default function NotionPage({ recordMap, pageId }) {
     if (router.isFallback) {
         return <Loading />
     }
+
+    const keys = Object.keys(recordMap?.block || {})
+    const block = recordMap?.block?.[keys[0]]?.value
+    const title = getBlockTitle(block, recordMap) || config.name
+
+    const isBlogPost =
+        block.type === 'page' && block.parent_table === 'collection'
     
+    const showTableOfContents = !!isBlogPost
+    const minTableOfContentsItems = 3
+    const isBlogPage = isBlogPost ||  uuidToId(pageId) === config.blogPageId
     //
     const siteMapPageUrl = mapPageUrl(recordMap)
     return (
@@ -70,7 +80,8 @@ export default function NotionPage({ recordMap, pageId }) {
             <NotionRenderer
                 bodyClassName={cs(
                     styles.notion,
-                    pageId === config.notion.rootNotionPageId && 'index-page'
+                    pageId === config.notion.rootNotionPageId && 'index-page',
+                    isBlogPage && 'blog-page'
                 )}
                 components={{
                     pageLink: ({
@@ -111,6 +122,8 @@ export default function NotionPage({ recordMap, pageId }) {
                         toggleDarkMode={darkMode.toggle}
                     />
                 }
+                minTableOfContentsItems={minTableOfContentsItems}
+                showTableOfContents={showTableOfContents}
                 mapPageUrl={siteMapPageUrl}
                 recordMap={recordMap}
                 darkMode={darkMode.value}

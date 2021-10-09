@@ -12,7 +12,7 @@ import { config } from '../lib/config'
 
 // 自定义样式
 import styles from './styles.module.css'
-
+// import PlayerButton from './PlayerButton'
 
 export default function NotionFooter({ isDarkMode, toggleDarkMode }) {
     const [hasMounted, setHasMounted] = useState(false)
@@ -27,8 +27,8 @@ export default function NotionFooter({ isDarkMode, toggleDarkMode }) {
 
     return (
         <footer className={styles.footer}>
-            <div className={styles.copyright}>Copyright 2021 {config.author} {' '} { <AiFillCheckCircle /> }
-                {config.icp && (<Link href='https://beian.miit.gov.cn/' ><a>{ config.icp}</a></Link>)}
+            <div className={styles.copyright}>Copyright 2021 {config.author} {' '} {<AiFillCheckCircle />}
+                {config.icp && (<Link href='https://beian.miit.gov.cn/' ><a>{config.icp}</a></Link>)}
             </div>
 
 
@@ -71,7 +71,7 @@ export default function NotionFooter({ isDarkMode, toggleDarkMode }) {
                     </a>
                 )}
             </div>
-
+        
         </footer>
     )
 

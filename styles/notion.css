@@ -21,6 +21,11 @@
     --notion-max-width: 900px;
   }
   
+  .blog-page {
+    --notion-max-width: 1080px;
+  }
+
+  
   .notion-text {
     padding: 0.5em 2px;
   }
