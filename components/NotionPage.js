@@ -19,6 +19,7 @@ import cs from 'classnames'
 
 // user lib
 import { Loading } from './Loading'
+import { ReactUtterances } from './ReactUtterances'
 
 // 自定义样式
 import styles from './styles.module.css'
@@ -65,71 +66,88 @@ export default function NotionPage({ recordMap, pageId }) {
 
     const isBlogPost =
         block.type === 'page' && block.parent_table === 'collection'
-    
+
     const showTableOfContents = !!isBlogPost
     const minTableOfContentsItems = 3
-    const isBlogPage = isBlogPost ||  uuidToId(pageId) === config.blogPageId
-    //
-    const siteMapPageUrl = mapPageUrl(recordMap)
-    return (
-        <>
-            <Head>
-                <title> {title} </title>
-            </Head>
+    const isBlogPage = isBlogPost || uuidToId(pageId) === config.blogPageId
 
-            <NotionRenderer
-                bodyClassName={cs(
-                    styles.notion,
-                    pageId === config.notion.rootNotionPageId && 'index-page',
-                    isBlogPage && 'blog-page'
-                )}
-                components={{
-                    pageLink: ({
-                        href,
-                        as,
-                        passHref,
-                        prefetch,
-                        replace,
-                        scroll,
-                        shallow,
-                        locale,
-                        ...props
-                    }) => (
-                        <Link
-                            href={href}
-                            as={as}
-                            passHref={passHref}
-                            prefetch={prefetch}
-                            replace={replace}
-                            scroll={scroll}
-                            shallow={shallow}
-                            locale={locale}
-                        >
-                            <a {...props} />
-                        </Link>
-                    ),
-                    code: Code,
-                    collection: Collection,
-                    collectionRow: CollectionRow,
-                    tweet: Tweet,
-                    modal: Modal,
-                    pdf: Pdf,
-                    equation: Equation
-                }}
-                footer={
-                    <NotionFooter
-                        isDarkMode={darkMode.value}
-                        toggleDarkMode={darkMode.toggle}
-                    />
-                }
-                minTableOfContentsItems={minTableOfContentsItems}
-                showTableOfContents={showTableOfContents}
-                mapPageUrl={siteMapPageUrl}
-                recordMap={recordMap}
-                darkMode={darkMode.value}
-                rootPageId={config.notion.rootNotionPageId}
-                fullPage={true}
-            />
-        </>
-    )
-}
+    let comments = null
+    // 评论
+    if (isBlogPost) {
+        if (config.utterancesGitHubRepo) {
+            comments = (
+                <ReactUtterances
+                    repo={config.utterancesGitHubRepo}
+                    issueMap='issue-term'
+                    issueTerm='title'
+                    theme={darkMode.value ? 'photon-dark' : 'github-light'}
+                />
+            )
+        }
+    }
+
+        //
+        const siteMapPageUrl = mapPageUrl(recordMap)
+        return (
+            <>
+                <Head>
+                    <title> {title} </title>
+                </Head>
+
+                <NotionRenderer
+                    bodyClassName={cs(
+                        styles.notion,
+                        pageId === config.notion.rootNotionPageId && 'index-page',
+                        isBlogPage && 'blog-page'
+                    )}
+                    components={{
+                        pageLink: ({
+                            href,
+                            as,
+                            passHref,
+                            prefetch,
+                            replace,
+                            scroll,
+                            shallow,
+                            locale,
+                            ...props
+                        }) => (
+                            <Link
+                                href={href}
+                                as={as}
+                                passHref={passHref}
+                                prefetch={prefetch}
+                                replace={replace}
+                                scroll={scroll}
+                                shallow={shallow}
+                                locale={locale}
+                            >
+                                <a {...props} />
+                            </Link>
+                        ),
+                        code: Code,
+                        collection: Collection,
+                        collectionRow: CollectionRow,
+                        tweet: Tweet,
+                        modal: Modal,
+                        pdf: Pdf,
+                        equation: Equation
+                    }}
+                    footer={
+                        <NotionFooter
+                            isDarkMode={darkMode.value}
+                            toggleDarkMode={darkMode.toggle}
+                        />
+                    }
+                    minTableOfContentsItems={minTableOfContentsItems}
+                    showTableOfContents={showTableOfContents}
+                    mapPageUrl={siteMapPageUrl}
+                    recordMap={recordMap}
+                    darkMode={darkMode.value}
+                    pageFooter={comments}
+                    rootPageId={config.notion.rootNotionPageId}
+                    fullPage={true}
+                />
+            </>
+        )
+    }
