@@ -13,6 +13,6 @@ export async function getStaticProps() {
 
 export default function Home({ recordMap }) {
   return (
-    <NotionPage recordMap={recordMap} />
+    <NotionPage recordMap={recordMap} pageId={config.notion.rootNotionPageId}/>
   )
 }

@@ -15,7 +15,7 @@ import { getPageTitle } from 'notion-utils'
 // other lib
 import useDarkMode from 'use-dark-mode'
 import { Tweet, TwitterContextProvider } from 'react-static-tweets'
-
+import cs from 'classnames'
 
 // user lib
 import { Loading } from './Loading'
@@ -26,6 +26,7 @@ import styles from './styles.module.css'
 // 配置文件
 import { config } from '../lib/config'
 import NotionFooter from './NotionFooter'
+import { mapPageUrl } from '../lib/map-page-url'
 
 
 // --------override components------------
@@ -43,9 +44,12 @@ const Modal = dynamic(
 // ------------------------------------------
 
 
-export default function NotionPage({ recordMap }) {
+export default function NotionPage({ recordMap, pageId }) {
     //
     const router = useRouter()
+    if (router.isFallback) {
+        return <Loading />
+    }
 
     // Notion页面Title
     const title = getPageTitle(recordMap) || config.name
@@ -53,11 +57,9 @@ export default function NotionPage({ recordMap }) {
     // 夜晚模式
     const darkMode = useDarkMode(false, { classNameDark: 'dark-mode' })
 
-    if (router.isFallback) {
-        return <Loading />
-    }
 
-
+    //
+    const siteMapPageUrl = mapPageUrl(recordMap)
     return (
         <>
             <Head>
@@ -65,6 +67,10 @@ export default function NotionPage({ recordMap }) {
             </Head>
 
             <NotionRenderer
+                bodyClassName={cs(
+                    styles.notion,
+                    pageId === config.notion.rootNotionPageId && 'index-page'
+                )}
                 components={{
                     pageLink: ({
                         href,
@@ -99,11 +105,12 @@ export default function NotionPage({ recordMap }) {
                     equation: Equation
                 }}
                 footer={
-                    <NotionFooter 
-                    isDarkMode={darkMode.value}
-                    toggleDarkMode={darkMode.toggle}
+                    <NotionFooter
+                        isDarkMode={darkMode.value}
+                        toggleDarkMode={darkMode.toggle}
                     />
                 }
+                mapPageUrl={siteMapPageUrl}
                 recordMap={recordMap}
                 darkMode={darkMode.value}
                 rootPageId={config.notion.rootNotionPageId}

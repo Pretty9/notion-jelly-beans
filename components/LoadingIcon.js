@@ -4,6 +4,7 @@ import styles from './styles.module.css'
 
 export const LoadingIcon = (props) => {
     const { className, ...rest } = props
+    
     return (
         <svg
             className={cs(styles.loadingIcon, className)}
@@ -18,12 +19,12 @@ export const LoadingIcon = (props) => {
                     y2='17.7832031%'
                     id='linearGradient-1'
                 >
-                    <stop stopColor='rgba(164, 164, 164, 1)' offset='0%' />
-                    <stop
-                        stopColor='rgba(164, 164, 164, 0)'
-                        stopOpacity='0'
-                        offset='100%'
-                    />
+                <stop stopColor='rgba(164, 164, 164, 1)' offset='0%' />
+                <stop
+                    stopColor='rgba(164, 164, 164, 0)'
+                    stopOpacity='0'
+                    offset='100%'
+                />
                 </linearGradient>
             </defs>
 
