@@ -20,6 +20,7 @@ import cs from 'classnames'
 // user lib
 import { Loading } from './Loading'
 import { ReactUtterances } from './ReactUtterances'
+import { PageActions } from './PageAction'
 
 // 自定义样式
 import styles from './styles.module.css'
@@ -28,6 +29,7 @@ import styles from './styles.module.css'
 import { config } from '../lib/config'
 import NotionFooter from './NotionFooter'
 import { mapPageUrl } from '../lib/map-page-url'
+import { getPageTweet } from '../lib/get-page-tweet'
 
 
 // --------override components------------
@@ -72,6 +74,8 @@ export default function NotionPage({ recordMap, pageId }) {
     const isBlogPage = isBlogPost || uuidToId(pageId) === config.blogPageId
 
     let comments = null
+    let pageAside = null
+
     // 评论
     if (isBlogPost) {
         if (config.utterancesGitHubRepo) {
@@ -83,6 +87,10 @@ export default function NotionPage({ recordMap, pageId }) {
                     theme={darkMode.value ? 'photon-dark' : 'github-light'}
                 />
             )
+        }
+        const tweet = getPageTweet(block, recordMap)
+        if(tweet) {
+            pageAside = <PageActions tweet={tweet} />
         }
     }
 
@@ -145,6 +153,7 @@ export default function NotionPage({ recordMap, pageId }) {
                     recordMap={recordMap}
                     darkMode={darkMode.value}
                     pageFooter={comments}
+                    pageAside={pageAside}
                     rootPageId={config.notion.rootNotionPageId}
                     fullPage={true}
                 />
