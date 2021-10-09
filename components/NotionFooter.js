@@ -1,7 +1,11 @@
 // react lib
 import { useEffect, useCallback, useState } from 'react'
-import { FaTwitter, FaGithub} from 'react-icons/fa'
+import { FaTwitter, FaGithub } from 'react-icons/fa'
 import { IoSunnyOutline, IoMoonSharp } from 'react-icons/io5'
+import { AiFillCheckCircle } from 'react-icons/ai'
+
+// next lib
+import Link from 'next/link'
 
 // 配置文件
 import { config } from '../lib/config'
@@ -23,7 +27,9 @@ export default function NotionFooter({ isDarkMode, toggleDarkMode }) {
 
     return (
         <footer className={styles.footer}>
-            <div className={styles.copyright}>Copyright 2021 {config.author}</div>
+            <div className={styles.copyright}>Copyright 2021 {config.author} {' '} { <AiFillCheckCircle /> }
+                {config.icp && (<Link href='https://beian.miit.gov.cn/' ><a>{ config.icp}</a></Link>)}
+            </div>
 
 
             {hasMounted ? (
@@ -40,7 +46,7 @@ export default function NotionFooter({ isDarkMode, toggleDarkMode }) {
 
 
             <div className={styles.social}>
-                
+
                 {config.social.twitter && (
                     <a
                         className={styles.twitter}
