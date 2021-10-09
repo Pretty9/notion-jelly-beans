@@ -47,9 +47,7 @@ const Modal = dynamic(
 export default function NotionPage({ recordMap, pageId }) {
     //
     const router = useRouter()
-    if (router.isFallback) {
-        return <Loading />
-    }
+   
 
     // Notion页面Title
     const title = getPageTitle(recordMap) || config.name
@@ -57,7 +55,10 @@ export default function NotionPage({ recordMap, pageId }) {
     // 夜晚模式
     const darkMode = useDarkMode(false, { classNameDark: 'dark-mode' })
 
-
+    if (router.isFallback) {
+        return <Loading />
+    }
+    
     //
     const siteMapPageUrl = mapPageUrl(recordMap)
     return (
